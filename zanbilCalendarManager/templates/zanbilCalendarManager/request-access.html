@@ -1,0 +1,30 @@
+{% extends "zanbilCalendarManager/base.html" %}
+
+{% load socialaccount %}
+
+{% block content %}
+<div class="container" style="margin-top: 5em;">
+  <div class="row justify-content-md-center">
+    <div class="col-xs-auto"  style="max-width: 400px;">
+      <div class="card">
+        <div class="card-header">
+          Request Access
+        </div>
+        <div class="card-body text-center">
+          <h5 class="card-title">{{space.name}}</h5>
+          <br/>
+          <p class="card-text">You can request for accessing this space</p>
+          <p class="card-text"><small class="text-muted">Admins will check your request</small></p>
+          <form method="post" action="/request-access/{{space.id}}">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between" style="margin-top: 0.5em">
+              <a href="/" class="btn btn-outline-dark" style="width: 49%; margin-top: 10px;">Home</a>
+              <input type="submit" class="btn btn-primary " style="width: 49%; margin-top: 10px;" value="Request Access">
+            </div>            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

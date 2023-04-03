@@ -1,0 +1,59 @@
+{% extends "zanbilCalendarManager/base.html" %}
+
+{% block content %}
+<div class="container-xl mt-5">
+    {% if messageStatus %}
+        <div class="alert alert-success" role="alert">
+            <span class="fw-bold">Message Sent!</span> We'll contact you soon :)
+        </div>
+    {% endif %} 
+    <p class="fs-1 fw-bold">Contact Us</p>
+    <div class="row mt-5">
+        <div class="col-md mb-5">
+            <span class="fa-solid fa-location-dot"></span>
+            <p>Kohlbettstr. 17, 57072 Siegen</p>
+            <a class="text-decoration-none" href="mailto:zanbil@usdima.de">zanbil@usdima.de</a>
+        </div>
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="margin-bottom: 30px;">What's up?</h5>
+                    <form action="/contact-us" method="post">
+                        {% csrf_token %}
+                        <div class="col-12 mb-3">
+                            <div class="form-floating">
+                                <input placeholder="Subject" class="form-control" id="subject" type="text" name="subject" required>
+                                <label for="summary" class="floating-input">Subject</label>
+                                {{form.subject.errors.as_text}}
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="form-floating">
+                              <textarea class="form-control" id="description" type="text" name="description" placeholder="Description" required></textarea>
+                              <label for="description" class="floating-input">description </label>
+                              {{form.description.errors.as_text}}
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="form-floating">
+                                <input placeholder="Email" class="form-control" id="email" type="email" name="email" required>
+                                <label for="email" class="floating-input">Email</label>
+                                {{form.email.errors.as_text}}
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="form-floating">
+                                <input placeholder="Phone" class="form-control" id="phone" type="number" name="phone">
+                                <label for="phone" class="floating-input">Phone</label>
+                                {{form.email.phone.as_text}}
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

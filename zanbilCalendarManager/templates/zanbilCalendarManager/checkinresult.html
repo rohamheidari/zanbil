@@ -1,0 +1,28 @@
+{% extends "zanbilCalendarManager/base.html" %}
+
+
+{% block content %}
+<div class="container" style="margin-top: 5em;">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{roomName}}</h5>
+          <br/>
+          {% if status == "Succeed" %}
+          <p class="card-text">Cheked In</p>
+          <a href="/" class="btn btn-outline-dark" style="width: 200px; margin-top: 10px;">Back to Home</a>
+          {% elif status == "AlreadyCheckedIn" %}
+          <p class="card-text">You already checked in to this event</p>
+          <a href="/" class="btn btn-outline-dark" style="width: 200px; margin-top: 10px;">Back to Home</a>
+          {% else %}
+          <p class="card-text">You're not a attendee of this event</p>
+          <p lass="card-text">Please make sure you're logged in with the same email that you got invited</p>
+          <a href="/" class="btn btn-info" style="width: 200px;">Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

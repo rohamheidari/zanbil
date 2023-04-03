@@ -1,0 +1,108 @@
+{% extends "zanbilCalendarManager/base.html" %}
+{% load zanbilCalendarManagerExtras %}
+
+{% block content %}
+<div class="container">
+    <div class="title-container">
+        <div class="d-flex justify-content-between" style="margin-top: 0.5em">
+            <p class="lead">Spaces for you</p>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="display_state">
+                <label class="form-check-label" for="display_state">My Spaces</label>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            {% for office in allOffices %}
+            {% if forloop.counter == 1 %}
+            <button class="nav-link active" id="nav-{{office.id}}-tab" data-bs-toggle="tab" data-bs-target="#nav-{{office.id}}" type="button" role="tab" aria-controls="nav-{{office.id}}" aria-selected="true">{{office.name}}</button>
+            {% else %}
+            <button class="nav-link" id="nav-{{office.id}}-tab" data-bs-toggle="tab" data-bs-target="#nav-{{office.id}}" type="button" role="tab" aria-controls="nav-{{office.id}}" aria-selected="true">{{office.name}}</button>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent" style="position:relative;">
+        {% for office in allOffices %}
+        {% if forloop.counter == 1 %}
+        <div class="tab-pane fade show active" id="nav-{{office.id}}" role="tabpanel" aria-labelledby="nav-{{office.id}}-tab">
+        {% else %}
+        <div class="tab-pane fade" id="nav-{{office.id}}" role="tabpanel" aria-labelledby="nav-{{office.id}}-tab">
+        {% endif %}
+                <div class="row row-cols-1 row-cols-sm-2row-cols-md-3  row-cols-lg-4 row-cols-xxl-5 g-4" style="margin-top:0.4em">
+                    {% for space in allSpaces %}
+                        {% if space.office.id == office.id %}
+                        {% if not request|spaceAccessStatus:space %}
+                        <div class="col not_accessible" style="padding:0; margin:0">
+                        {%else%}
+                        <div class="col" style="padding:0; margin:0">
+                        {% endif %}
+                            <div class="card" style="margin: 10px;">
+                                {% if space.image %}
+                                    <img class="card-img-top card-img-top-costume" src="{{space.aws_url}}" alt="Card image cap">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ space.name }}</h5>
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <a href="{{space.office.location}}" class="text-decoration-none">
+                                                <h6 class="card-subtitle mb-2 text-muted fw-lighter">{{space.office.address}}</h6>
+                                            </a>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            {% if space.type == 'c' %}
+                                                <h6 class="card-subtitle mb-2 text-muted fas fa-chair" style="font-size:small" alt="Personal desk & chair"></h6>
+                                            {% else %}
+                                                <h6 class="card-subtitle mb-2 text-muted fas fa-door-open" style="font-size:small" alt="Conference room"></h6>
+                                            {% endif %}
+                                        </li>
+                                    </ul>
+                                    <!-- <p class="card-text">description</p> -->
+                                </div>
+
+                                <div class="card-footer">
+                                    {% if request|spaceAccessStatus:space %}
+                                    <a href="/calendar/{{space.id}}" class="btn btn-primary" style="min-width: 100px;">Book</a>
+                                    {% else %}
+                                    <a href="/request-access/{{space.id}}" class="btn btn-outline-primary" style="min-width: 100px;">Request</a>
+                                    {% endif %}
+                                    <a href="/events/?space={{space.id}}" class="btn btn-outline-dark" style="min-width: 100px;"">Events</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+        </div>
+        {% endfor %}
+    </div>  
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_script%}
+<script type="text/javascript">
+  $(document).ready(function(){
+      var displayToggler = $('#display_state');
+      var elements = document.getElementsByClassName('not_accessible');    
+      var allShown = true;
+      console.log("here : ", elements)
+      $(displayToggler).click(function(){ 
+        if(allShown == true){
+            console.log("here 2: ", allShown, elements)      
+            for (let el of elements) el.style.display = 'None';
+            allShown = false;
+        }
+        else{
+            console.log("here 3: ", allShown, elements)
+            for (let el of elements) el.style.display = 'inline';
+            allShown = true;
+        }
+      });      
+  });
+  </script>
+{%endblock%}

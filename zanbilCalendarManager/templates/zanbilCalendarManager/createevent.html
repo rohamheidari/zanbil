@@ -1,0 +1,129 @@
+{% extends "zanbilCalendarManager/base.html" %}
+
+{% block content %}
+
+<div class="container" style="margin-top: 5em;">
+  <div class="justify-content-lg-center">
+    {% if not status %}
+    <div class="alert alert-danger" role="alert">
+      This space is booked for the time you chose, please select another time. see the
+      <a href="#" class="alert-link">Space Schedule</a>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %}
+    {% if form.errors %}
+      {% for error in form.non_field_errors %}
+          <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+          </div>
+      {% endfor %}
+    {% endif %}   
+    <div class="">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" style="margin-bottom: 30px;">Create New Eevnt</h5>
+          <form action="/create-event/{{spaceId}}" method="post" class="">
+            {% csrf_token %}
+            <div class="col-12 mb-3">
+              <div class="form-floating">
+                <input placeholder="Summary" class="form-control" id="summary" type="text" name="summary" required>
+                <label for="summary" class="floating-input">summary </label>
+                {{form.summary.errors.as_text}}
+              </div>
+            </div>
+            <div class="col-12 mb-3">
+              <div class="form-floating">
+                <textarea class="form-control" id="description" type="text" name="description" placeholder="Description"></textarea>
+                <label for="description" class="floating-input">description </label>
+                {{form.description.errors.as_text}}
+              </div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md">
+                <div class="form-floating">
+                  <input class="form-control {%if form.start.errors %}is-invalid{%endif%}" id="start" type="datetime-local" name="start" placeholer="Start Time" required>
+                  <label for="start" class="floating-input">start </label>
+                  {{form.start.errors.as_text}}
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <input class="form-control" id="end" type="datetime-local" name="end" placeholder="End" required>
+                  <label for="end" class="floating-input">End</label>
+                  {{form.end.errors.as_text}}  
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <select class="form-select" id="repetition" name="repetition" aria-label="Repetition of recurrent event">
+                    <option value="n" selected>No Repeate</option>
+                    <option value="d">Every Day</option>
+                    <option value="w">Every Week</option>
+                    <option value="m">Every Month</option>
+                  </select>
+                  <label for="repetition">Repetition</label>
+                  {{form.repetition.errors.as_text}}  
+                </div>
+              </div>
+            </div>    
+            {% if space.type == 'r' %}
+            <div class="col-12 mb-3">
+              <div class="field_wrapper">
+                <div class="d-flex flex-row" style="margin-top: 1em;">
+                  <div class="flex-fill pe-2">Guests: </div>
+                  <div style="width:50px">
+                    <a href="javascript:void(0);" class="add_button btn btn-primary btn-sm" title="Add field" style="width : 100%; margin-bottom: 10px;">+</a>
+                  </div> 
+                </div>
+                <div class="d-flex flex-row  mb-3">
+                  <div class="flex-fill pe-2">
+                    <input placeholder="user@example.com" class="form-control" id="attendee_0" type="email" name="attendee_0">
+                  </div> 
+                  <div style="width:50px">
+                    <a href="javascript:void(0);" class="remove_button btn btn-danger" title="Remove field" style="width : 100%;height: auto;">-</a>
+                  </div>
+                </div> 
+              </div>
+            </div> 
+            {% endif %}
+            <input id="number_of_attendees" name="number_of_attendees" value="1" hidden>
+            <input type="number" id="space_id" name="space_id" value={{spaceId}} hidden>
+            <input id="is_edit" name="is_edit" hidden>
+            <!-- {{form}} -->
+            <input type="submit" name='save' class="btn btn-primary" value="Submit">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+{% block extra_script%}
+<script type="text/javascript">
+  $(document).ready(function(){
+      var addButton = $('.add_button');
+      var wrapper = $('.field_wrapper');
+      var x = 1;
+      
+      $(addButton).click(function(){          
+        var fieldHTML = `<div class="d-flex flex-row  mb-3"><div class="flex-fill pe-2"><input placeholder="user@example.com" class="form-control" id="attendee_${x}" type="email" name="attendee_${x}"></div><div style="width:50px"><a href="javascript:void(0);" class="remove_button btn btn-danger" title="Remove field" style="width : 100%;height: auto;">-</a></div></div>`
+        $(wrapper).append(fieldHTML); //Add field html
+        x++;
+        document.getElementById("number_of_attendees").value = x
+      });      
+      $(wrapper).on('click', '.remove_button', function(e){
+          e.preventDefault();
+          $(this).parent('div').parent('div').remove(); //Remove field html
+      });
+  });
+  </script>
+{%endblock%}

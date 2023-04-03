@@ -1,0 +1,102 @@
+{% extends "zanbilCalendarManager/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row  mb-3 mt-3">
+        <div class="col-md-5" >
+            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                {% for batch in eventsForUser%}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if range and batch.name == 'Range' %} active {% elif range == False and forloop.counter == 1 %} active {% endif %}" id='pills-{{batch.id}}-tab' data-bs-toggle="pill" data-bs-target="#pills-{{batch.id}}" type="button" role="tab" aria-controls="pills-{{batch.id}}" aria-selected="true">{{batch.name}}</button>
+                </li>
+                {% endfor %}
+                
+            </ul>
+        </div>
+        <div class="col-md-2 col-sm-4">
+            <label for="start_date">Space</label>
+            <select class="form-select" id="spaces" name="spaces" aria-label="spaces">
+                <option value='all' {% if not space %} selected {% endif %}>All</option>
+                {% for spaceOption in allSpaces %}
+                    <option value={{spaceOption.id}} {% if spaceOption.id == space.id %} selected {% endif %}>{{spaceOption.name}}</option>
+                {% endfor %}
+              </select>
+        </div>
+        <div class="col-md-2 col-sm-4">
+            <label for="start_date">from</label>
+            <input type="date" class="form-control" value={{rangeStart}} id="start_date" name="start_date"  placeholder="range start">
+        </div>
+        <div class="col-md-2 col-sm-4">
+            <label for="end_date">to</label>
+            <input type="date" class=" form-control" value={{rangeEnd}} id="end_date" name="end_date" placeholder="range end">
+        </div>
+        <div class="col-md-1 col-sm-4">
+            <button class="add_button btn btn-primary" id="update_button" title="update" style="margin-top: 23px" type="button">update</a>
+        </div>             
+    </div>  
+    <div class="tab-content" id="pills-tabContent">
+        {% for batch in eventsForUser %}
+        <div class="tab-pane fade show {% if range and batch.name == 'Range' %} active {% elif range == False and forloop.counter == 1 %} active {% endif %}" id="pills-{{batch.id}}" role="tabpanel" aria-labelledby="pills-{{batch.id}}-tab">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3  row-cols-lg-4 row-cols-xxl-5 g-4" style="margin-top:0.4em">
+                {%if batch.events %}
+                    {% for event in batch.events %}
+                        <div class="col" style="padding:0; margin:0">
+                            <div class="card" style=" margin: 10px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ event.summary }}</h5>
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <h6 class="card-subtitle mb-1 fw-lighter" style="font-size:small">start: {{event.start}}</h6>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <h6 class="card-subtitle fw-lighter" style="font-size:small">end: {{event.end}}</h6>
+                                        </li>
+                                    </ul>
+                                    <p class="card-text text-truncate">{{ event.description }}</p>
+                                    {% if event.readyToCheckIn %}
+                                    <footer class="blockquote-footer m-0">Scan QR code to Check In</footer>      
+                                    {% endif %}
+
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/eventsummary/{{ event.id }}" class="btn btn-success">Summary</a>
+                                    {% if event.owner %}
+                                    <a href="/edit-event/{{ event.id }}" class="btn btn-outline-secondary">Edit</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>   
+                    {% endfor %}
+                {% else %}
+                    <div class="text-muted fw-light">
+                        No events for this time range
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="card-deck">
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_script%}
+<script type="text/javascript">
+    $("#update_button").click(function () {
+        console.log("update Clicked!")
+        var space = document.getElementById("spaces").value
+        var start = document.getElementById("start_date").value.toString()
+        var end = document.getElementById("end_date").value.toString()
+        var spaceId = "{{ my_str }}";
+        var url = `/events/`
+        var spaceTemp = `?`
+        if (space && space != 'all') {spaceTemp = `?space=${space}&`}
+        dateTemp = ``;
+        if (start && end) { dateTemp = `start=${start}&end=${end}`}
+        url +=spaceTemp+dateTemp
+        location.href = url;
+    });
+</script>
+{%endblock%}

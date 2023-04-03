@@ -1,0 +1,126 @@
+{% load static %}
+{% load socialaccount %}
+{% load zanbilCalendarManagerExtras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Zanbil</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'zanbilCalendarManager/styles/styles.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="shortcut icon" type="image/png" href="{% static 'zanbilCalendarManager/images/favicon.ico' %}"/>
+        <script src="https://kit.fontawesome.com/4c6c276058.js" crossorigin="anonymous"></script>
+        {% block extra_head %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding-right: 10px; padding-left: 10px;">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"">
+                    <img src=" {% static 'zanbilCalendarManager/images/LogoType-Color.svg' %}" height="30" alt="">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                                <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/spaces">Spaces</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/events">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/contact-us">Contact Us</a>
+                        </li>
+                    </ul>
+                    <div class="navbar-nav" style="margin-left: auto;">
+                        <div class="nav-item active">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown dropstart">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  {{user.username}}
+                                  {% if request|notVerifiedEmail %}
+                                  <span class="position-absolute top-10 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                    <span class="visually-hidden">New alerts</span>
+                                  </span>
+                                  {% endif %}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/accounts/email">
+                                        Emails
+                                        {% if request|notVerifiedEmail %}
+                                        <span class="position-absolute top-10 start-50 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                        <span class="visually-hidden">New alerts</span>
+                                        </span>
+                                        {% endif %}
+                                        </a>
+                                    </li>          
+                                    <li><a class="dropdown-item" href="/accounts/password/change">Password</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/accounts/logout/">Logout</a></li>
+                                </ul>
+                              </li>
+                            {% else %}
+                            <a href="/accounts/login" class="nav-link">log in</i></a>
+                            {% endif %}
+                        <div>
+                    </div>                    
+                </div>
+            </div>
+        </nav>
+        {% block content %}
+        {% endblock %}     
+        {% endblock %}
+        <!-- <footer class="w-100 bd-footer py-3 mt-5 bg-light justify-content-between align-items-center align-bottom">
+            <div class="container-xl">
+                <div class="d-flex flex-wrap">
+                    <div class="col">
+                        <p class="fs-5 mb-2">Zanbil</p>
+                        <p class="text-muted m-0 mb-2" >&copy; 2022 University of Siegen</p>
+                    </div>
+                    <ul class="nav p-0 justify-content-end align-self-end">
+                      <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+                      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact Us</a></li>
+                      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+                      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+                    </ul>
+                </div>          
+            </div>          
+        </footer> -->
+        {% block extra_body %}
+        {% endblock %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+          
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+              apiKey: "AIzaSyC7kzleJNogh6cjDcHpzlLjMEMvxKuSMLg",
+              authDomain: "zanbil-350420.firebaseapp.com",
+              projectId: "zanbil-350420",
+              storageBucket: "zanbil-350420.appspot.com",
+              messagingSenderId: "438242102258",
+              appId: "1:438242102258:web:e2d40073f1566e54ccb96b",
+              measurementId: "G-7DXFWQQ9ZB"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+          </script>
+        {% block extra_script %}
+        {% endblock %}
+    </body>
+</html>

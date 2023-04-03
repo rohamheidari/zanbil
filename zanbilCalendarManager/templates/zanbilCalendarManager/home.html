@@ -1,0 +1,102 @@
+{% extends "zanbilCalendarManager/base.html" %}
+
+{% load socialaccount %}
+
+{% block content %}
+<div class="container-xl mt-5">
+  {%if upcomingEvents %}
+  <div class="d-flex justify-content-between">
+    <div class="fw-bold fs-5">Upcoming Events</div>
+    <a href="/events" class="text-decoration-none text-muted">See All</a>      
+  </div>
+  <div class="d-flex overflow-auto row-cols-1 row-cols-sm-2 row-cols-md-3  row-cols-lg-4 row-cols-xxl-5 g-4">
+    {% for event in upcomingEvents %}
+        <div class="col" style="padding:0; margin:0">
+            <div class="card" style=" margin: 10px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.summary }}</h5>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <h6 class="card-subtitle mb-1 fw-lighter" style="font-size:small">start: {{event.start}}</h6>
+                        </li>
+                        <li class="list-inline-item">
+                            <h6 class="card-subtitle fw-lighter" style="font-size:small">end: {{event.end}}</h6>
+                        </li>
+                        <li class="list-inline-item">
+                          <h6 class="card-subtitle fw-lighter" style="font-size:small">space: {{event.space.name}}</h6>
+                        </li>
+                        <li class="list-inline-item">
+                          <h6 class="card-subtitle fw-lighter" style="font-size:small">{{event.sequence_id}}</h6>
+                        </li>
+                    </ul>
+                    <!-- <p class="card-text text-truncate">{{ event.sequence_id }}</p> -->
+                    {% if event.readyToCheckIn %}
+                    <footer class="blockquote-footer m-0">Scan QR code to Check In</footer>      
+                    {% endif %}
+
+                </div>
+                <div class="card-footer">
+                    <a href="/eventsummary/{{ event.id }}" class="btn btn-success" style="min-width: 100px;">Summary</a>
+                    {% if event.owner %}
+                    <a href="/edit-event/{{ event.id }}" class="btn btn-outline-secondary" style="min-width: 100px;">Edit</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>   
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="d-flex justify-content-between mt-5">
+    <div class="fw-bold fs-5">Your Spaces</div>
+    <a href="/spaces" class="text-decoration-none text-muted">See All</a>      
+  </div>
+  <div class="d-flex overflow-auto row-cols-1 row-cols-sm-2 row-cols-md-3  row-cols-lg-4 row-cols-xxl-5 g-4">
+    {%if spaces %}
+    {% for space in spaces %}
+      <div class="col" style="padding:0; margin:0">
+          <div class="card" style="margin: 10px;">
+              {% if space.image %}
+                  <img class="card-img-top card-img-top-costume" src="{{space.aws_url}}" alt="Card image cap">
+              {% endif %}
+              <div class="card-body">
+                  <h5 class="card-title">{{ space.name }}</h5>
+                  <ul class="list-inline">
+                      <li class="list-inline-item">
+                          <a href="{{space.office.location}}" class="text-decoration-none">
+                              <h6 class="card-subtitle mb-2 text-muted fw-lighter">{{space.office.address}}</h6>
+                          </a>
+                      </li>
+                      <li class="list-inline-item">
+                          {% if space.type == 'c' %}
+                              <h6 class="card-subtitle mb-2 text-muted fas fa-chair" style="font-size:small" alt="Personal desk & chair"></h6>
+                          {% else %}
+                              <h6 class="card-subtitle mb-2 text-muted fas fa-door-open" style="font-size:small" alt="Conference room"></h6>
+                          {% endif %}
+                      </li>
+                  </ul>
+                  <!-- <p class="card-text">description</p> -->
+              </div>
+
+              <div class="card-footer">
+                  <a href="/calendar/{{space.id}}" class="btn btn-primary" style="min-width: 100px;">Book</a>
+                  <a href="/events/?space={{space.id}}" class="btn btn-outline-dark" style="min-width: 100px;"">Events</a>
+              </div>
+              
+          </div>
+      </div>
+    {% endfor %}
+    {% else %}
+    <div class="col">
+      <div class="card" style=" margin: 10px;">
+        <div class="card-body">
+          <p class="card-text">You dont have access to reserve any space yet</p>
+          <p class="card-text">Check all spaces and request for access</p>
+          <a href="/spaces" class="btn btn-info">See all the Rooms & chairs</a>
+          <!-- <a href="/roomslist" class="btn btn-outline-dark" style="width: 200px; margin-top: 10px;">Check-In meeting</a> -->
+        </div>
+      </div>
+    </div>
+    {%endif%}
+  </div>
+</div>
+{% endblock %}

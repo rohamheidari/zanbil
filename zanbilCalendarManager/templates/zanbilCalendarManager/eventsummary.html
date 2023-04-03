@@ -1,0 +1,123 @@
+{% extends "zanbilCalendarManager/base.html" %}
+{% load zanbilCalendarManagerExtras %}
+
+
+{% block content %}
+<div class="container" style="margin-top: 5em;">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{event.summary}}</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Description:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.description}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Office:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.space.office}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Space:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.space.name}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Start:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.start}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  End:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.end}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Recurrent:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.recurrent}}
+                </div>    
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Repeat:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.recurrent_period|recurrentPeriodLabel}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Creator:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {{event.creator.email}} 
+                </div>
+              </div>
+            </li>
+            {% if space.type == 'r' %}
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  Attendees:
+                </div>
+                <div class="col" style="min-width:200px">
+                  {% for attendee in event.attendees.all %}
+                  {{attendee.email}}  
+                  {% endfor %}
+                </div>
+              </div>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+        <div class="card-footer">
+          {% if access == 'event_expired' %}
+          <footer class="blockquote-footer m-0">Event Expired</footer>      
+          {% elif readyToCheckin%}
+          <a href="/checkin-event/{{event.id}}" class="btn btn-success" style="min-width: 140px;">Check In</a>
+          {% endif %}
+          {% if access == 'owner' %}
+          <a href="/edit-event/{{event.id}}" class="btn btn-outline-secondary" style="min-width: 100px;">Edit</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

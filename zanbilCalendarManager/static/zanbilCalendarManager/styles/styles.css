@@ -1,0 +1,74 @@
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    min-height: 100% !important;
+}
+body {
+    margin: 0;
+    padding: 0 !important;
+    width: 100%;
+    min-height: 100% !important;
+}
+.my-navbar{
+    text-align: right;
+}
+
+.navbar-img{
+    width: 100px;
+    height: auto;
+}
+.center{
+    text-align: center;
+}
+.align-right{
+    text-align: right;
+}
+
+.padding-box-1{
+    padding: 1em;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+.cards-flex-container {
+    display: flex;
+    /* justify-content: space-between; */
+    flex-wrap: wrap;
+    align-content: space-around;
+    margin: auto;
+}
+
+.flex-item-1{
+    flex-grow: 1;
+}
+
+.event-card-flex{
+    flex-grow: 1;
+    flex-basis: 300px;
+    max-width: 300px;
+    padding: 10px;
+}
+
+.title-container{
+    padding: 20px 0;
+}
+
+.title-p{
+    line-height: 28px;
+    font-size: 1.3em;
+}
+
+.rooms-location-link{
+    text-decoration: none;
+
+}
+
+.card-img-top-costume{
+    max-height: 100px;
+    object-fit: cover;
+}
