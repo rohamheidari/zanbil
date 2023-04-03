@@ -44,7 +44,7 @@ AWS_S3_REGION_NAME = "eu-central-1"
 
 DEBUG = os.environ.get("DEBUG", default=False)
 
-if DEBUG:
+if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'zanbil.herokuapp.com']
